@@ -16,10 +16,12 @@ import { Image } from 'expo-image';
 import { SUPPORTED_LANGUAGES } from '../data/languages';
 import { globalState } from '../utils/globalState';
 import { images } from '../constants/images';
+import { useLanguageStore } from '../store/useLanguageStore';
 
 export default function LanguageSelection() {
   const router = useRouter();
-  const [selectedLangId, setSelectedLangId] = useState(globalState.getActiveLanguageId());
+  const { activeLanguageId, setActiveLanguageId } = useLanguageStore();
+  const [selectedLangId, setSelectedLangId] = useState(activeLanguageId || globalState.getActiveLanguageId() || 'es');
   const [searchQuery, setSearchQuery] = useState('');
 
   const getCountryCode = (langId: string) => {
@@ -38,6 +40,7 @@ export default function LanguageSelection() {
   const handleContinue = () => {
     if (selectedLangId) {
       globalState.setActiveLanguageId(selectedLangId);
+      setActiveLanguageId(selectedLangId);
       router.replace('/(tabs)');
     }
   };
